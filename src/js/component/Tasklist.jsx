@@ -5,38 +5,18 @@ const Tasklist = () => {
   const [todos, setTodos] = useState([]);
   const [task, setTask] = useState("");
 
+
   const urlTodos =
     "https://playground.4geeks.com/apis/fake/todos/user/KitsuneDai";
 
-  const generateCompleteList = () => {
+ useEffect(() => {
     fetch(urlTodos)
-      .then((response) => response.json())
-      .then((data) => {
-        setTodos(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+      .then((response) => {return response.json()})
+      .then((data) => {setTodos(data)})
+      .catch((err) => {console.error(err);});
+  },[todos]) 
 
  
-
-  const deleteTask = (taskId) => { // Envía una solicitud DELETE a la API para eliminar una tarea específica según su ID. Una vez que se completa la solicitud, la tarea se elimina del estado todos.
-    fetch(`${urlTodos}/${taskId}`, {
-    method: "DELETE",
-    })
-    .then(() => {setTodos(todos.filter((todo) => todo.id !== taskId));
-    })
-    .catch((err) => {console.error(err);
-  });
-  };
-
-  useEffect(()=> {
-    generateCompleteList()
-  },[])
-
-
-
   const newTask = () => {
     fetch(urlTodos, {
       method: "PUT", 
@@ -48,6 +28,19 @@ const Tasklist = () => {
         setTodos([...todos, data]);
         setTask(""); // Limpia el campo de entrada después de agregar la tarea
         console.log("Nueva tarea añadida a la lista:", data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const deleteTask = (taskId) => {
+    fetch(urlTodos, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setTodos(todos.filter((todo) => todo.id !== taskId));
+        console.log("Eliminar:", taskId);
       })
       .catch((err) => {
         console.error(err);
@@ -73,15 +66,9 @@ const Tasklist = () => {
         </li>
 
         {todos.map((todo) => (
-          
           <li key={todo.id} className="tasklist">
             {todo.label}
-            <span
-              onClick={() => deleteTask(todo.id)}
-              className="tasklist"
-            >
-              <RiDeleteBinLine className="icon" />
-            </span>
+            <span onClick={() => deleteTask(todo.id)} className="tasklist"><RiDeleteBinLine className="icon" /></span>
           </li>
         ))}
         
@@ -97,3 +84,4 @@ const Tasklist = () => {
 };
 
 export default Tasklist;
+
