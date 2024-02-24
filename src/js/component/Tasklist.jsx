@@ -9,12 +9,21 @@ const Tasklist = () => {
   const urlTodos =
     "https://playground.4geeks.com/apis/fake/todos/user/KitsuneDai";
 
- useEffect(() => {
-    fetch(urlTodos)
-      .then((response) => {return response.json()})
-      .then((data) => {setTodos(data)})
-      .catch((err) => {console.error(err);});
-  },[todos]) 
+    useEffect(() => {
+      fetchTasks();
+    }, []);
+  
+    const fetchTasks = () => {
+      fetch(urlTodos)
+        .then((response) => response.json())
+        .then((data) => {
+          setTodos(data);
+          console.log("Tareas obtenidas:", data);
+        })
+        .catch((err) => {
+          console.error("Error al obtener las tareas:", err);
+        });
+    };
 
  
   const newTask = () => {
@@ -27,15 +36,16 @@ const Tasklist = () => {
       .then((data) => {
         setTodos([...todos, data]);
         setTask(""); // Limpia el campo de entrada después de agregar la tarea
-        console.log("Nueva tarea añadida a la lista:", data);
+        console.log("PUT-> Nueva tarea añadida a la lista:", data);
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
+
   const deleteTask = (taskId) => {
-    fetch(urlTodos, {
+    fetch( urlTodos , {
       method: "DELETE",
     })
       .then(() => {
@@ -47,11 +57,28 @@ const Tasklist = () => {
       });
   };
 
+  const buttonYes =() => {
+    fetch(urlTodos, {
+      method: "DELETE",
+    })
+    .then (()=>{
+      setTodos([]);
+      console.log("Todas las tareas eliminadas");
+    })
+    .catch((err) => {
+      console.err(err);
+    })
+  }
 
+  const buttonNo =()=>{
+    alert("¡Pues deja de tocar cosas!");
+  };
+
+ 
   return (
     <>
       <ul>
-        <li>
+        <li> 
         <input type="text" 
              onChange={(e)=>setTask(e.target.value)} //Traemos un valor que nos proporciona el input al setTask
              value={task} // Añadimos el valor que entró desde el input a la variable llamada task
@@ -66,7 +93,8 @@ const Tasklist = () => {
         </li>
 
         {todos.map((todo) => (
-          <li key={todo.id} className="tasklist">
+          //Añado un key que se genere para cada child de forma única.
+          <li key={`task-${todo.label}`} className="tasklist">  
             {todo.label}
             <span onClick={() => deleteTask(todo.id)} className="tasklist"><RiDeleteBinLine className="icon" /></span>
           </li>
@@ -78,6 +106,12 @@ const Tasklist = () => {
 
       <div className="footer">
         {todos.length === 0 ? (<p>No hay tareas en la lista, añada una tarea</p>) : todos.length === 1 ? (`${todos.length} tarea`) : (`${todos.length} tareas`)}
+      </div>
+
+      <div className="d-grid gap-2" style={{paddingBottom: "15px"}}>
+          <p className="text-center" style={{marginBottom: "0px"}}>¿Quieres mandarlo todo a la mierda?</p>
+              <button onClick={buttonYes} className="btn btn-primary" type="button">Sí quiero</button>
+              <button onClick={buttonNo} className="btn btn-danger buttonNo" type="button">No quiero</button>
       </div>
     </>
   );
