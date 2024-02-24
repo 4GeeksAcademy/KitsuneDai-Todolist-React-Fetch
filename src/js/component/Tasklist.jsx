@@ -26,15 +26,16 @@ const Tasklist = () => {
     };
 
  
-  const newTask = () => {
+  const addTask = () => {
+    let newTodo = { label: task, done: false };
     fetch(urlTodos, {
       method: "PUT", 
-      body: JSON.stringify([...todos, { label: task, done: false }]), // Agrega la nueva tarea al array existente
+      body: JSON.stringify([...todos, newTodo]), // Agrega la nueva tarea al array existente
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => response.json())
       .then((data) => {
-        setTodos([...todos, data]);
+        setTodos([...todos, newTodo]);
         setTask(""); // Limpia el campo de entrada después de agregar la tarea
         console.log("PUT-> Nueva tarea añadida a la lista:", data);
       })
@@ -58,7 +59,7 @@ const Tasklist = () => {
   };
 
   const buttonYes =() => {
-    fetch(urlTodos, {
+    fetch("https://playground.4geeks.com/apis/fake/todos/user/KitsuneDai", {
       method: "DELETE",
     })
     .then (()=>{
@@ -84,7 +85,8 @@ const Tasklist = () => {
              value={task} // Añadimos el valor que entró desde el input a la variable llamada task
              onKeyDown={(e)=> {
               if (e.key === "Enter") {
-                newTask();
+                addTask();
+                
               }
           }} 
              className="Addtask"
@@ -113,6 +115,7 @@ const Tasklist = () => {
               <button onClick={buttonYes} className="btn btn-primary" type="button">Sí quiero</button>
               <button onClick={buttonNo} className="btn btn-danger buttonNo" type="button">No quiero</button>
       </div>
+
     </>
   );
 };

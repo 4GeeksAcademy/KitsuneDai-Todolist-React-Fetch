@@ -3,16 +3,16 @@ import Tasklist from './Tasklist'
 
  
 const TodoList = () => {
-
+  
 
   return (
     <div className='ToDoApp'>
 
-        <h1>todos</h1>
+        <h1>to-dos</h1>
      
         <Tasklist/>
         
-
+  
     </div>
     )
   }
