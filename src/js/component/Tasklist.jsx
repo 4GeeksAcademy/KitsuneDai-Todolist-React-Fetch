@@ -9,7 +9,6 @@ const Tasklist = () => {
     "https://playground.4geeks.com/apis/fake/todos/user/KitsuneDai";
 
  
-
   //POST --> Para crear un usuario
   useEffect(() => {
     fetch(urlTodos, {
@@ -92,27 +91,22 @@ const Tasklist = () => {
   };
 
   //para eliminar toda la lista
-  const buttonYes = () => {
-    const clearnList = todos.length > 0 ? todos : [{ label: "Sonríe :)", done: false }];
-    fetch(urlTodos, {
-      method: "PUT",
-      body: JSON.stringify(clearnList),
-      headers: { "Content-Type": "application/json" },
-    })
-    .then((response) => {
-      if (response.ok) {
-        setTodos([]); // Actualizar el estado con un arreglo vacío
-        console.log("PUT-> Todas las tareas han sido eliminadas exitosamente");
-      } else {
-        console.error("Error al eliminar todas las tareas");
-      }
-    })
-    .catch((err) => {
-      console.error("Error al eliminar todas las tareas:", err);
-    });
+ const buttonYes = () => {
+  let cleanList = {
+    label: "¡Sonríe, tu eres lo principal! :)", 
+    done: false
+  }
 
-    
-  };
+  fetch(urlTodos, {
+    method: "PUT",
+    body: JSON.stringify([cleanList]),
+    headers: { "Content-Type": "application/json" },
+  })
+  .then((response) => { return response.json() })
+  .then((data) => { setTodos([ ]) })
+  .catch((err) => { err })
+};
+ 
 
   const buttonNo = () => {
     alert("¡Pues deja de tocar cosas!");
