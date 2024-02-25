@@ -103,7 +103,9 @@ const Tasklist = () => {
     headers: { "Content-Type": "application/json" },
   })
   .then((response) => { return response.json() })
-  .then((data) => { setTodos([ ]) })
+  .then((data) => {
+    setTodos([ ])
+    console.log ("PUT-> Todas las tareas han sido eliminadas exitosamente", (data))})
   .catch((err) => { err })
 };
  
